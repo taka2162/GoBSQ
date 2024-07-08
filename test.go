@@ -82,11 +82,11 @@ func main() {
 			// Println(Map[1:])
 
 			if piscine.Duplicate(Empty, Obstacle, Full) ||
-				!piscine.Friend(Map[1:], rune(Empty), rune(Obstacle), rune(Full)) {
+				!piscine.Friend(Map, Empty, Obstacle, Full) {
 
 				if piscine.Duplicate(Empty, Obstacle, Full) {
 					Println("Duplicate")
-				} else if !piscine.Friend(Map[1:], rune(Empty), rune(Obstacle), rune(Full)) {
+				} else if !piscine.Friend(Map, Empty, Obstacle, Full) {
 					Println("Elian")
 				}
 				Println("\x1b[35mmap error\x1b[0m")

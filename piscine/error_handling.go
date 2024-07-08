@@ -11,13 +11,13 @@ func Duplicate(Empty, Obstacle, Full byte) bool {
 	return false
 }
 
-func Friend(Map []string, Obstacle, Full, Empty rune) bool {
-	for i, s := range Map {
-		for j, r := range s {
-			if (r != Obstacle && r != Full && r != Empty) || !IsPrintable(r) {
-
+func Friend(Map []string, Obstacle, Full, Empty byte) bool {
+	for i := 1; i < len(Map)-1; i++ {
+		for j := 0; j < len(Map[i]); j++ {
+			if (Map[i][j] != Obstacle && Map[i][j] != Full && Map[i][j] != Empty) ||
+				!IsPrintable(Map[i][j]) {
 				Printf("i -> %d\nj -> %d\n", i, j)
-				Println(r)
+				Println(Map[i][j])
 				return false
 			}
 		}
@@ -25,7 +25,7 @@ func Friend(Map []string, Obstacle, Full, Empty rune) bool {
 	return true
 }
 
-func IsPrintable(r rune) bool {
+func IsPrintable(r byte) bool {
 	if r <= '~' && r >= ' ' {
 		return true
 	}
