@@ -6,55 +6,6 @@
 #define FALSE 0
 #define	MAP_SIZE 10
 
-int	calculate_square_size(int **map, int i, int j)
-{
-	int	y;
-	int	x;
-	int	size;
-
-	size = 1;
-	while (1)
-	{
-		y = 0;
-		while (y < size)
-		{
-			x = 0;
-			while (x < size)
-			{
-				if (map[i + y][j + x] != 0)
-					return (size - 1) ;
-				x++;
-			}
-			y++;
-		}
-		size++;
-	}
-	return (size);
-}
-
-void	write_square_size(int **map)
-{
-	int	i;
-	int	j;
-	int	max;
-
-	max = 0;
-	i = 1;
-	while (map[i][1] != -2)
-	{
-		j = 1;
-		while (map[i][j] != -2)
-		{
-			if (map[i][j] == 0)
-			{
-				map[i][j] += calculate_square_size(map, i, j);
-			}
-			j++;
-		}
-		i++;
-	}
-}
-
 void	__print_map(int **map)
 {
 	int	i;
@@ -79,6 +30,86 @@ void	__print_map(int **map)
 		i++;
 	}
 }
+
+int	calculate_square_size(int **map, int i, int j, int flag)
+{
+	int	y;
+	int	x;
+	int	size;
+
+	size = 1;
+	while (1)
+	{
+		y = 0;
+		while (y < size)
+		{
+			x = 0;
+			while (x < size)
+			{
+				if (map[i + y][j + x] < 0)
+					return (size - 1) ;
+				x++;
+			}
+			y++;
+		}
+		size++;
+	}
+	return (size);
+}
+
+void	print_max_size(int **map, int i, int j)
+{
+	int	size;
+	int	y;
+	int	x;
+
+	size = map[i][j];
+	y = 0;
+	while (y < size)
+	{
+		x = 0;
+		while (x < size)
+		{
+			map[i + y][j + x] = -3;
+			x++;
+		}
+		y++;
+	}
+}
+
+void	write_square_size(int **map)
+{
+	int	i;
+	int	j;
+	int	max;
+	int	index[2];
+
+	max = 0;
+	i = 1;
+	while (map[i][1] != -2)
+	{
+		j = 1;
+		while (map[i][j] != -2)
+		{
+			if (map[i][j] == 0)
+			{
+				map[i][j] += calculate_square_size(map, i, j, FALSE);
+				if (max < map[i][j])
+				{
+					max = map[i][j];
+					index[0] = i;
+					index[1] = j;
+				}
+			}
+			j++;
+		}
+		i++;
+	}
+	__print_map(map);
+	printf("index[0] = %d  index[1] = %d\n", index[0], index[1]);
+	print_max_size(map, index[0], index[1]);
+}
+
 
 int	main(void)
 {
