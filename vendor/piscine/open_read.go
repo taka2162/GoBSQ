@@ -2,17 +2,23 @@ package piscine
 
 import "os"
 
-func OpenRead(buf []byte, i int) []byte {
+func OpenRead(i int) []byte {
+	var input []byte
+	buf := make([]byte, 1024)
+
 	f, err := os.Open(os.Args[i])
 	if err != nil {
 		return nil
 	}
 	defer f.Close()
 	for {
-		count, _ := f.Read(buf)
-		if count == 0 {
+		count, err := f.Read(buf)
+		if count > 0 {
+			input = append(input, buf[:count]...)
+		}
+		if err != nil {
 			break
 		}
 	}
-	return buf
+	return input
 }

@@ -1,17 +1,19 @@
 package piscine
 
+// import . "fmt"
+
 // mapgen.go内でのエラーハンドリング
-func BadLength(ReadBuf []byte) bool {
-	Map := Split(string(ReadBuf), "\n")
+func BadLength(Map []string) bool {
 	Length := len(Map[0])
 	if len(Map) < 2 || Length < 4 || !IsNumeric(Map[0][:Length-3]) {
 		return true
 	} else {
-		for _, s := range Map {
-			if s == "" {
-				return true
-			}
-		}
+		// for _, s := range Map {
+		// 	if s == "" {
+		// 		println("daaa")
+		// 		return true
+		// 	}
+		// }
 		return false
 	}
 }

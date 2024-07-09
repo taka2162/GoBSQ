@@ -14,22 +14,28 @@ type MapInfo struct {
 
 func MapSetup(ReadBuf []byte) MapInfo {
 	Setup := MapInfo{}
-
 	Map := Split(string(ReadBuf), "\n")
 	Length := len(Map[0])
-	if BadLength(ReadBuf) {
+
+	if BadLength(Map) {
 		Setup.Error = true
 	} else {
 		Setup.Lines = Map
 		Setup.Row = len(Map[1])
-		Setup.Col = Atoi(Map[0][:Length-3])
+		col, err := Atoi(Map[0][:Length-3])
+		if err == false {
+			Setup.Error = true
+			return Setup
+		}
+		Setup.Col = col
 
 		Setup.Empty = Map[0][Length-3]
 		Setup.Obstacle = Map[0][Length-2]
 		Setup.Full = Map[0][Length-1]
 	
 		//最初の障害物とかと改行？
-		if Setup.Col != len(Map)-2 || IncludeFull(Setup.Full, Map[1:]){
+		if Setup.Col != len(Map)-2 || Setup.Row == 0 ||
+			Setup.Col == 0 || IncludeFull(Setup.Full, Map[1:]){
 			Setup.Error = true
 		}
 	}

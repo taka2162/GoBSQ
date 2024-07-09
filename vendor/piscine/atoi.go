@@ -8,9 +8,9 @@ func Strlen(s string) int {
 	return count
 }
 
-func Atoi(s string) int {
+func Atoi(s string) (int, bool) {
 	if Strlen(s) == 0 {
-		return 0
+		return 0, false
 	}
 	num := 0
 	i := 0
@@ -27,8 +27,8 @@ func Atoi(s string) int {
 			num = 10*num + check
 			i++
 		} else {
-			return 0
+			return 0, false
 		}
 	}
-	return num * sign
+	return num * sign, true
 }

@@ -1,9 +1,12 @@
 package main
 
 import (
-	"piscine"
+	"ft"
 	"os"
+	"piscine"
 )
+
+const BUFFERSIZE = 1024
 
 func main() {
 	Argc := len(os.Args)
@@ -15,7 +18,7 @@ func main() {
 }
 
 func HandleStdInput() {
-	buf := make([]byte, 1024)
+	buf := make([]byte, BUFFERSIZE)
 	var input []byte
 	for {
 		n, err := os.Stdin.Read(buf)
@@ -31,12 +34,18 @@ func HandleStdInput() {
 
 func HandleFileInputs(Argc int) {
 	for i := 1; i < Argc; i++ {
-		buf := piscine.OpenRead(make([]byte, 1024), i)
+		buf := piscine.OpenRead(i)
 		if buf == nil {
 			piscine.PrintError()
+			if i != Argc-1 {
+				ft.PrintRune('\n')
+			}
 			continue
 		}
 		ProcessMapData(buf)
+		if i != Argc-1 {
+			ft.PrintRune('\n')
+		}
 	}
 }
 
