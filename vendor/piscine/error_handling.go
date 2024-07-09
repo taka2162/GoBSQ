@@ -7,6 +7,11 @@ func BadLength(ReadBuf []byte) bool {
 	if len(Map) < 2 || Length < 4 || !IsNumeric(Map[0][:Length-3]) {
 		return true
 	} else {
+		for _, s := range Map {
+			if s == "" {
+				return true
+			}
+		}
 		return false
 	}
 }
