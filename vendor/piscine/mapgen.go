@@ -24,13 +24,14 @@ func MapSetup(ReadBuf []byte) MapInfo {
 		Setup.Row = len(Map[1])
 		Setup.Col = Atoi(Map[0][:Length-3])
 
-		//最初の障害物とかと改行？
-		if Setup.Col != len(Map)-2 {
-			Setup.Error = true
-		}
 		Setup.Empty = Map[0][Length-3]
 		Setup.Obstacle = Map[0][Length-2]
 		Setup.Full = Map[0][Length-1]
+	
+		//最初の障害物とかと改行？
+		if Setup.Col != len(Map)-2 || IncludeFull(Setup.Full, Map[1:]){
+			Setup.Error = true
+		}
 	}
 	return Setup
 }
