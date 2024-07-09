@@ -1,12 +1,12 @@
 package piscine
 
-func WriteMaxSize(Map [][]int, i, j int) {
-	size := Map[i][j]
+func WriteMaxSize(Map [][]int, MaxX, MaxY int) {
+	size := Map[MaxX][MaxY]
 	y := 0
 	for y < size {
 		x := 0
 		for x < size {
-			Map[i+y][j+x] = -3
+			Map[MaxX+y][MaxY+x] = -3
 			x++
 		}
 		y++
@@ -16,27 +16,28 @@ func WriteMaxSize(Map [][]int, i, j int) {
 func WriteSize(Map [][]int) {
 	i := 1
 	max := 0
-	indx := make([]int, 2)
+	MaxX := 0
+	MaxY := 0
 
 	for Map[i][1] != -2 {
 		j := 1
 		for Map[i][j] != -2 {
 			if Map[i][j] == 0 {
-				Map[i][j] += Caluculate(Map, i, j)
+				Map[i][j] += Calculate(Map, i, j)
 				if max < Map[i][j] {
 					max = Map[i][j]
-					indx[0] = i
-					indx[1] = j
+					MaxX = i
+					MaxY = j
 				}
 			}
 			j++
 		}
 		i++
 	}
-	WriteMaxSize(Map, indx[0], indx[1])
+	WriteMaxSize(Map, MaxX, MaxY)
 }
 
-func Caluculate(Map [][]int, i int, j int) int {
+func Calculate(Map [][]int, i int, j int) int {
 	size := 1
 	for {
 		y := 0
@@ -52,5 +53,4 @@ func Caluculate(Map [][]int, i int, j int) int {
 		}
 		size++
 	}
-	return size
 }
