@@ -1,8 +1,8 @@
 package piscine
 
-import (
-	. "fmt"
-)
+// import (
+// 	. "fmt"
+// )
 
 func Duplicate(Empty, Obstacle, Full byte) bool {
 	if Obstacle == Full || Obstacle == Empty || Full == Empty {
@@ -16,8 +16,6 @@ func Friend(Map []string, Obstacle, Full, Empty byte) bool {
 		for j := 0; j < len(Map[i]); j++ {
 			if (Map[i][j] != Obstacle && Map[i][j] != Full && Map[i][j] != Empty) ||
 				!IsPrintable(Map[i][j]) {
-				Printf("i -> %d\nj -> %d\n", i, j)
-				Println(Map[i][j])
 				return false
 			}
 		}

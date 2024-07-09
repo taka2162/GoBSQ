@@ -4,9 +4,42 @@ import (
 	"a/ft"
 	"a/piscine"
 	"fmt"
-	. "fmt"
 	"os"
 )
+
+type MapInfo struct {
+	Map []string
+	Row int
+	Col int
+	Empty byte
+	Obstacle byte
+	Full byte
+}
+
+func MapSetup(ReadBuf []byte) MapInfo {
+	Setup := MapInfo{}
+	// Setup.Lines := piscine.Split(string(ReadBuf), "\n")
+
+	Map := piscine.Split(string(ReadBuf), "\n")
+	Length := len(Map[0])
+
+	Setup.Map = Map
+	Setup.Row = len(Map[1])
+	Setup.Col = piscine.Atoi(Map[0][:Length-3])
+
+	Setup.Empty = Map[0][Length-3]
+	Setup.Obstacle = Map[0][Length-2]
+	Setup.Full = Map[0][Length-1]
+
+	return Setup
+}
+
+func PrintError() {
+	Str := "map error\n"
+	for _, r := range Str {
+		ft.PrintRune(rune(r))
+	}
+}
 
 func IsNumeric(s rune) bool {
 	if s >= '0' && s <= '9' {
@@ -25,7 +58,8 @@ func RuneSlice(Rune []rune) {
 func Printstr(Answer [][]byte) {
 	for i := range Answer {
 		for j := range Answer[i] {
-			fmt.Printf("\x1b[32m%2s \x1b[m", string(Answer[i][j]))
+			// fmt.Printf("\x1b[32m%2s \x1b[m", string(Answer[i][j]))
+			ft.PrintRune(rune(Answer[i][j]))
 		}
 		fmt.Println()
 	}
@@ -51,77 +85,57 @@ func main() {
 	Argc := len(os.Args)
 	Map := make([]string, 1024)
 
-	if Argc == 2 {
-		f, err := os.Open(os.Args[1])
-		if err != nil {
-			Println("map error")
-		}
-		defer f.Close()
-		for {
-			count, _ := f.Read(buf)
-			if count == 0 {
-				break
+	if Argc == 1 {
+        for {
+            _, err := os.Stdin.Read(buf)
+            if err != nil {
+                return
+            }
+            // PrintStr(string(buf))
+        }
+		} else if Argc > 1 {
+		for i := 1; i < Argc; i++ {
+			f, err := os.Open(os.Args[i])
+			if err != nil {
+				PrintError()
+				continue
+				// os.Exit(0)
 			}
-			// 読み取る部分
-			for i := 0; i < count; i++ {
-				ft.PrintRune(rune(buf[i]))
-			}
-
-			Map = piscine.Split(string(buf), "\n")
-			Println(Map)
-
-			// それぞれのモノたち
-			Length := len(Map[0])
-
-			Empty := Map[0][Length-3]
-			Obstacle := Map[0][Length-2]
-			Full := Map[0][Length-1]
-
-			// Error Handling
-
-			// Println(Map[1:])
-
-			if piscine.Duplicate(Empty, Obstacle, Full) ||
-				!piscine.Friend(Map, Empty, Obstacle, Full) {
-
-				if piscine.Duplicate(Empty, Obstacle, Full) {
-					Println("Duplicate")
-				} else if !piscine.Friend(Map, Empty, Obstacle, Full) {
-					Println("Elian")
-				}
-				Println("\x1b[35mmap error\x1b[0m")
-				os.Exit(0)
-			}
-
-			Row := len(Map[1])
-			for i := 1; i < len(Map)-1; i++ {
-				if Row != len(Map[i]) {
-					Println("Not Same Row")
-					os.Exit(1)
-					Println(Map[i])
+			defer f.Close()
+			for {
+				count, _ := f.Read(buf)
+				if count == 0 {
+					break
 				}
 			}
-
-			Col := piscine.Atoi(Map[0][:Length-3])
-
-			Printf("列数（x）-> %d\n", Row)
-			Printf("行数（y）-> %d\n", Col)
+			MapData := MapSetup(buf)
+			if piscine.Duplicate(MapData.Empty, MapData.Obstacle, MapData.Full) ||
+				!piscine.Friend(Map, MapData.Empty, MapData.Obstacle, MapData.Full) {
+				PrintError()
+				continue
+			}
+			for i := 1; i < len(MapData.Map)-1; i++ {
+				if MapData.Row != len(MapData.Map[i]) {
+					PrintError()
+					continue
+				}
+			}
 
 			// Col+2, Row+2のスライスを生成する
-			MAP := make([][]int, Col+2)
+			MAP := make([][]int, MapData.Col+2)
 			for i := range MAP {
-				MAP[i] = make([]int, Row+2)
+				MAP[i] = make([]int, MapData.Row+2)
 			}
 
-			for y := 0; y < Col+2; y++ {
-				for x := 0; x < Row+2; x++ {
-					if x == 0 || y == 0 || x == Row+1 || y == Col+1 {
+			for y := 0; y < MapData.Col+2; y++ {
+				for x := 0; x < MapData.Row+2; x++ {
+					if x == 0 || y == 0 || x == MapData.Row+1 || y == MapData.Col+1 {
 						MAP[y][x] = -2
-					} else if y <= Col && x <= Row {
-						switch Map[y][x-1] {
-						case Empty:
+					} else if y <= MapData.Col && x <= MapData.Row {
+						switch MapData.Map[y][x-1] {
+						case MapData.Empty:
 							MAP[y][x] = 0
-						case Obstacle:
+						case MapData.Obstacle:
 							MAP[y][x] = -1
 						default:
 							MAP[y][x] = -2
@@ -129,34 +143,32 @@ func main() {
 					}
 				}
 			}
-			Println("Initial MAP:")
-			PrintMap(MAP) // 用意
+			// Println("Initial MAP:")
+			// PrintMap(MAP) // 用意
 
 			piscine.WriteSize(MAP)
 
-			Println("\n\n     ------- ↓ RESULT ↓ -------\n")
-			PrintMap(MAP) // 結果。。。
+			// Println("\n\n     ------- ↓ RESULT ↓ -------\n")
+			// PrintMap(MAP) // 結果。。。
 
 			// 返す用のstring型のスライスを生成
-			Answer := make([][]byte, Col)
+			Answer := make([][]byte, MapData.Col)
 			for i := range Answer {
-				Answer[i] = make([]byte, Row)
+				Answer[i] = make([]byte, MapData.Row)
 			}
 
-			for y := 1; y <= Col; y++ {
-				for x := 1; x <= Row; x++ {
+			for y := 1; y <= MapData.Col; y++ {
+				for x := 1; x <= MapData.Row; x++ {
 					switch MAP[y][x] {
 					case -1:
-						Answer[y-1][x-1] = Obstacle
+						Answer[y-1][x-1] = MapData.Obstacle
 					case -3:
-						Answer[y-1][x-1] = Full
+						Answer[y-1][x-1] = MapData.Full
 					default:
-						Answer[y-1][x-1] = Empty
+						Answer[y-1][x-1] = MapData.Empty
 					}
 				}
 			}
-
-			Println("\nAnswer:")
 			Printstr(Answer)
 		}
 	}
