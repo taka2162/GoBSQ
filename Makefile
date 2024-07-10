@@ -7,6 +7,7 @@ SRCS			:=	vendor/piscine/atoi.go \
 					vendor/piscine/open_read.go \
 					vendor/piscine/print.go \
 					vendor/piscine/split.go \
+					vendor/piscine/main_util.go \
 					main.go
 
 all:	$(NAME)
@@ -17,4 +18,6 @@ $(NAME): $(SRCS)
 clean:
 		rm -f $(NAME)
 
-.PHONY: all clean
+re: clean all
+
+.PHONY: all clean re

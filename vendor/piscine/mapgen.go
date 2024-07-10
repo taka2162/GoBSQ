@@ -1,7 +1,5 @@
 package piscine
 
-// import . "fmt"
-
 type MapInfo struct {
 	Lines    []string
 	Row      int
@@ -32,10 +30,10 @@ func MapSetup(ReadBuf []byte) MapInfo {
 		Setup.Empty = Map[0][Length-3]
 		Setup.Obstacle = Map[0][Length-2]
 		Setup.Full = Map[0][Length-1]
-	
+
 		//最初の障害物とかと改行？
 		if Setup.Col != len(Map)-2 || Setup.Row == 0 ||
-			Setup.Col == 0 || IncludeFull(Setup.Full, Map[1:]){
+			Setup.Col == 0 || IncludeFull(Setup.Full, Map[1:]) {
 			Setup.Error = true
 		}
 	}
