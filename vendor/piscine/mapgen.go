@@ -31,7 +31,6 @@ func MapSetup(ReadBuf []byte) MapInfo {
 		Setup.Obstacle = Map[0][Length-2]
 		Setup.Full = Map[0][Length-1]
 
-		//最初の障害物とかと改行？
 		if Setup.Col != len(Map)-2 || Setup.Row == 0 ||
 			Setup.Col == 0 {
 			Setup.Error = true
@@ -55,7 +54,7 @@ func InitializeMap(MapData MapInfo) [][]int {
 				case MapData.Empty:
 					MAP[y][x] = 0
 				case MapData.Full:
-					MAP[y][x] = 0
+					MAP[y][x] = -3
 				case MapData.Obstacle:
 					MAP[y][x] = -1
 				default:
@@ -73,13 +72,12 @@ func AnswerMap(MAP [][]int, MapData MapInfo) [][]byte {
 	for i := range Answer {
 		Answer[i] = make([]byte, MapData.Row)
 	}
-
 	for y := 1; y <= MapData.Col; y++ {
 		for x := 1; x <= MapData.Row; x++ {
-			switch MAP[y][x] {
-			case -1:
+			switch {
+			case MAP[y][x] == -1:
 				Answer[y-1][x-1] = MapData.Obstacle
-			case -3:
+			case MAP[y][x] <= -3:
 				Answer[y-1][x-1] = MapData.Full
 			default:
 				Answer[y-1][x-1] = MapData.Empty

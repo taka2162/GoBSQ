@@ -1,8 +1,5 @@
 package piscine
 
-// import . "fmt"
-
-// mapgen.go内でのエラーハンドリング
 func BadLength(Map []string) bool {
 	Length := len(Map[0])
 	if len(Map) < 2 || Length < 4 || !IsNumeric(Map[0][:Length-3]) {
