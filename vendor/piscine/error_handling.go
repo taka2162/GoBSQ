@@ -8,12 +8,6 @@ func BadLength(Map []string) bool {
 	if len(Map) < 2 || Length < 4 || !IsNumeric(Map[0][:Length-3]) {
 		return true
 	} else {
-		// for _, s := range Map {
-		// 	if s == "" {
-		// 		println("daaa")
-		// 		return true
-		// 	}
-		// }
 		return false
 	}
 }
