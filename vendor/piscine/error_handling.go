@@ -18,17 +18,6 @@ func BadLength(Map []string) bool {
 	}
 }
 
-func IncludeFull(Full byte, Map []string) bool {
-	for _, s := range Map {
-		for _, b := range s {
-			if b == rune(Full) {
-				return true
-			}
-		}
-	}
-	return false
-}
-
 func IsError(MapData MapInfo) bool {
 	if Duplicate(MapData.Empty, MapData.Obstacle, MapData.Full) ||
 		!Friend(MapData.Lines, MapData.Empty, MapData.Obstacle, MapData.Full) {

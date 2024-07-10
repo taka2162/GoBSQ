@@ -33,7 +33,7 @@ func MapSetup(ReadBuf []byte) MapInfo {
 
 		//最初の障害物とかと改行？
 		if Setup.Col != len(Map)-2 || Setup.Row == 0 ||
-			Setup.Col == 0 || IncludeFull(Setup.Full, Map[1:]) {
+			Setup.Col == 0 {
 			Setup.Error = true
 		}
 	}
@@ -53,6 +53,8 @@ func InitializeMap(MapData MapInfo) [][]int {
 			} else if y <= MapData.Col && x <= MapData.Row {
 				switch MapData.Lines[y][x-1] {
 				case MapData.Empty:
+					MAP[y][x] = 0
+				case MapData.Full:
 					MAP[y][x] = 0
 				case MapData.Obstacle:
 					MAP[y][x] = -1
